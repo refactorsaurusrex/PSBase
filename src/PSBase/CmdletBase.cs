@@ -3,22 +3,24 @@ using System.Management.Automation;
 
 namespace PSBase
 {
-    public abstract class CmdletBase<T> : PSCmdlet where T : class, ICmdletHandler
+    public abstract class CmdletBase<THandler, TApp> : PSCmdlet 
+        where THandler : class, ICmdletHandler
+        where TApp : PSApplicationBase, new()
     {
         private readonly Random _random = new Random();
-        private PSApplication _app;
+        private TApp _app;
 
-        protected T GetRootObject() => _app.Register<T>();
+        protected THandler GetRootObject() => _app.Register<THandler>();
 
-        protected override void BeginProcessing() => _app = PSApplication.Create();
+        protected override void BeginProcessing() => _app = new TApp();
 
         protected string ResolvePath(string path) => GetUnresolvedProviderPathFromPSPath(path);
 
         protected override void EndProcessing() => _app.Dispose();
 
-        protected void WriteInformation(string message)
+        protected void WriteInformation(string message, string source = "")
         {
-            WriteInformation(new InformationRecord(message, ""));
+            WriteInformation(new InformationRecord(message, source));
         }
 
         protected void WriteError(string error, ErrorCategory category)
