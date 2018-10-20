@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="2018.2.1" />
     <PackageReference Include="PowerShellStandard.Library" Version="5.1.0-RC1" />
     <PackageReference Include="SimpleInjector" Version="4.3.0" />
   </ItemGroup>

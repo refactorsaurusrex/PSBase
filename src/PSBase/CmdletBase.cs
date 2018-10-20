@@ -1,8 +1,10 @@
 using System;
 using System.Management.Automation;
+using JetBrains.Annotations;
 
 namespace PSBase
 {
+    [PublicAPI]
     public abstract class CmdletBase<THandler, TApp> : PSCmdlet 
         where THandler : class, ICmdletHandler
         where TApp : PSApplicationBase, new()
@@ -23,20 +25,20 @@ namespace PSBase
             WriteInformation(new InformationRecord(message, source));
         }
 
-        protected void WriteError(string error, ErrorCategory category)
+        protected void WriteError(string error, ErrorCategory category = ErrorCategory.NotSpecified, object targetObject = null)
         {
-            var errorRecord = new ErrorRecord(new Exception(error), category.ToString(), category, null);
+            var errorRecord = new ErrorRecord(new Exception(error), category.ToString(), category, targetObject);
             WriteError(errorRecord);
         }
 
-        protected void WriteUnspecifiedError(Exception exception)
+        protected void WriteException(Exception exception, ErrorCategory errorCategory = ErrorCategory.NotSpecified, object targetObject = null)
         {
-            WriteError(new ErrorRecord(exception, exception.GetType().Name, ErrorCategory.NotSpecified, null));
+            WriteError(new ErrorRecord(exception, exception.GetType().Name, errorCategory, targetObject));
         }
 
-        protected void ThrowTerminatingError(string message, ErrorCategory category)
+        protected void ThrowTerminatingError(string message, ErrorCategory category = ErrorCategory.NotSpecified, string errorId = null, object targetObject = null)
         {
-            var errorRecord = new ErrorRecord(new Exception(message), category.ToString(), category, null);
+            var errorRecord = new ErrorRecord(new Exception(message), errorId ?? category.ToString(), category, targetObject);
             ThrowTerminatingError(errorRecord);
         }
 
