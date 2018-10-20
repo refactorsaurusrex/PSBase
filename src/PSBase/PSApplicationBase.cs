@@ -16,7 +16,7 @@ namespace PSBase
                 return Container.GetInstance<TService>();
 
             Register();
-            Container.Register<ITokenManager, TokenManager>();
+            Container.Register<ISecretsManager, SecretsManager>();
             Container.Verify();
 
             _isRegistered = true;

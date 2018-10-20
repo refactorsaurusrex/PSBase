@@ -8,7 +8,7 @@ namespace PSBase.Tests
         [Fact]
         public void Test1()
         {
-
+            var x = "This is a test".GetSha1Hash();
         }
     }
 }

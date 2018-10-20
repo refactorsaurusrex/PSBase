@@ -4,13 +4,23 @@ using System.Security.Cryptography;
 
 namespace PSBase
 {
-    public static class Extensions
+    internal static class Extensions
     {
         public static bool IsNullOrEmpty(this string value) => string.IsNullOrEmpty(value);
 
         public static T ToEnum<T>(this string value) where T : Enum => (T)Enum.Parse(typeof(T), value, true);
 
         public static bool CanBeParsedTo<T>(this string value) where T : struct, Enum => Enum.TryParse<T>(value, true, out _);
+
+        public static string GetSha1Hash(this string value)
+        {
+            using (var sha1 = SHA1.Create())
+            {
+                var bytes = System.Text.Encoding.UTF8.GetBytes(value);
+                var hash = sha1.ComputeHash(bytes);
+                return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+            }
+        }
 
         public static string GetSha1Hash(this FileInfo file)
         {
